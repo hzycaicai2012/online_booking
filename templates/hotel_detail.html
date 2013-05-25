@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block body %}
+  <ul class=entries>
+  {% for hotel in hotel_detail %}
+  <li><h2>{{ hotel.name }}</h2></li>
+  <li>Location:{{ hotel.location }}</li>
+  <li>Star level:{{ hotel.star }}&emsp;&emsp;&emsp;&emsp;
+  Score:{{ hotel.score }}</li>
+  </li>
+  <li>Tel:{{ hotel.telphone }}</li>
+  <li><img src="{{ url_for('static', filename='img/'+hotel.hotel_pic) }}" /></li>
+  <li>{{ hotel.detail|safe }}
+  {% endfor %}
+  </ul>
+{% endblock %}

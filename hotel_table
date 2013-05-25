@@ -1,0 +1,21 @@
+Hotel:
+	id
+	name
+	city
+	location
+	telphone
+	lowest_price
+	detail_info
+	hotel_pic: (save a  image folder for each hotel)
+	star
+	score
+
+Room:
+	id
+	hotel_id: (foreigh key: hotel.id)
+	room_type: (only 3 types)
+	capacity
+	occupied
+	current_price
+	discount
+

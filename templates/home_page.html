@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block body %}
+  <ul class=entries>
+  {% for info in user_info %}
+	<li>{{ info.name }}</li>
+	<li>{{ info.email|safe }}</li>
+  {% endfor %}
+  </ul>
+{% endblock %}

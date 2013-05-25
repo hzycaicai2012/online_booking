@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block body %}
+  {% if session.manager %}
+    {% for hotel in hotel_detail %}
+    <form action="{{ url_for('update_hotel', hotel_id=hotel.id) }}" method=post class=update-hotel enctype=multipart/form-data>
+      <dl>
+        <dt>Name:
+		<dd><input type=text size=30 name=name value="{{hotel.name}}">
+		<dt>City:
+        <dd><input type=text size=30 name=city value="{{hotel.city}}">
+		<dt>Location:
+        <dd><input type=text size=30 name=location value="{{hotel.location}}">
+		<dt>Telphone:
+        <dd><input type=text size=30 name=telphone value="{{hotel.telphone}}">
+		<dt>Lowest price:
+        <dd><input type=text size=30 name=lowest_price value="{{hotel.lowest_price}}">
+		<dt>Hotel picture:
+        <dd><input type=file size=30 name=hotel_pic value="{{hotel.hotel_pic}}">
+        <dt>Detail:
+        <dd><textarea name=detail value="{{hotel.detail_info}}" rows=5 cols=40></textarea>
+        <dd><input type=submit value=Add>
+      </dl>
+    </form>
+	{% endfor %}
+  {% endif %}
+  {% endblock %}

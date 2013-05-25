@@ -1,0 +1,16 @@
+Online Booking is a minimal online booking application using SQLAlchemy and Flask.
+
+Completed:
+	Log in and log out.
+	Add Hotel briefly
+	See the hotel in index page and hotel page
+	See the detail info of hotel
+
+To be done:
+	Flight
+	Comment
+	More beautiful
+	Rank the info
+	See the history
+	More detail...
+

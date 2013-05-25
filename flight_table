@@ -1,0 +1,33 @@
+Flight:
+id
+company
+flight_id
+start_city
+stop_city
+start_time
+stop_time
+start_airport
+stop_airport
+path :(the path the plane fly through)
+non_stop: boolean
+plane_type
+
+
+plane_room:(3 type)
+id
+fligt_id
+type
+capacity
+occupied
+discount
+price
+
+score-----flight
+comment----plane_room
+
+
+comment:
+order_id
+content
+score
+
