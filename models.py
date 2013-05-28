@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #coding=utf-8
-from sqlalchemy import Table, Column, Integer, String, Float, Text, Date, ForeignKey, MetaData
+from sqlalchemy import Table, Column, Integer, String, Float, Boolean, Text, Date, ForeignKey, MetaData
 from sqlalchemy.orm import relationship, backref
 from database import Base
 
@@ -74,9 +74,9 @@ class Room(Base):
 	__tablename__ = 'room'
 	id = Column(Integer, primary_key=True)
 	hotel_id = Column(Integer, ForeignKey('hotel.id'), nullable=False)
-	room_type
-	capacity
-	occupied
+	room_type = Column(String(20),nullable=False)
+	capacity = Column(Integer, nullable=False, default=30)
+	occupied = Column(Integer, nullable=False, default=0)
 	current_price = Column(Float(4), nullable=False)
 	discount = Column(Float(1), nullable=False)
 
@@ -84,17 +84,112 @@ class Room(Base):
 			hotel_id = None,
 			room_type=None,
 			current_price=None,
-			origin_price=None,
 			discount=None,
-			end_time=None):
+			capacity=30,
+			occupied=0):
 		self.hotel_id=hotel_id
 		self.room_type=room_type
+		self.capacity = capacity
+		self.occupied = occupied
 		self.current_price=current_price
-		self.origin_price=origin_price
 		self.discount=discount
-		self.end_time=end_time
 
 	def __repr__(self):
 		return '%r' % (self.room_type)
 
+
+class Flight(Base):
+	__tablename__ = 'flight'
+	id = Column(Integer, primary_key=True)
+	company = Column(String(30), nullable=False)
+	flight_num = Column(String(30), nullable=False)
+	start_city = Column(String(30), nullable=False)
+	stop_city = Column(String(30), nullable=False)
+	start_time = Column(String(30), nullable=False)
+	stop_time = Column(String(30), nullable=False)
+	start_airport = Column(String(30), nullable=False)
+	stop_airport = Column(String(30), nullable=False)
+	path = Column(String(40))
+	non_stop = Column(Boolean,nullable=False,default=True)
+	plane_type = Column(String(30),nullable=False)
+	order_nums = Column(Integer,nullable=False,default=0)
+	score  = Column(Integer,nullable=False,default=0)
+	cabins = relationship("Cabin", backref="flight")
+
+	def __init__(self,
+			company=None,
+			flight_id=None,
+			start_city=None,
+			stop_city=None,
+			start_time=None,
+			stop_time=None,
+			start_airport=None,
+			stop_airport=None,
+			path=None,
+			non_stop=True,
+			plane_type=None,
+			order_nums=0,
+			score=0):
+
+		self.company=company
+		self.flight_id=flight_id
+		self.start_city=start_city
+		self.stop_city=stop_city
+		self.start_time=start_time
+		self.stop_time=stop_time
+		self.start_airport=start_airport
+		self.stop_airport=stop_airport
+		self.path = path
+		self.non_stop = non_stop
+		self.plane_type = plane_type
+		self.order_nums = order_nums
+		self.score = score
+
+	def __repr__(self):
+		return '%r' % (self.company)
+
+class Cabin(Base):
+	__tablename__ = 'cabin'
+	id = Column(Integer, primary_key=True)
+	flight_id = Column(Integer, ForeignKey('flight.id'), nullable=False)
+	cabin_type = Column(String(30),nullable=False)
+	capacity = Column(Integer, nullable=False, default=30)
+	occupied = Column(Integer, nullable=False, default=0)
+	current_price = Column(Float(4), nullable=False)
+	discount = Column(Float(1), nullable=False)
+
+	def __init__(self,
+			flight_id = None,
+			cabin_type=None,
+			current_price=None,
+			discount=None,
+			capacity=30,
+			occupied=0):
+		self.flight_id=flight_id
+		self.cabin_type=cabin_type
+		self.capacity = capacity
+		self.occupied = occupied
+		self.current_price=current_price
+		self.discount=discount
+
+	def __repr__(self):
+		return '%r' % (self.room_type)
+
+
+class Comment(Base):
+	__tablename__ = 'comment'
+	order_id = Column(Integer, primary_key=True, autoincrement=False)
+	content = Column(Text,nullable=False)
+	score = Column(Integer,nullable=False,default=5)
+
+	def __init__(self,
+			order_id = None,
+			content=None,
+			score=5):
+		self.order_id=order_id
+		self.content=content
+		self.score = score 
+
+	def __repr__(self):
+		return '%r' % (self.order_id)
 

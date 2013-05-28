@@ -1,4 +1,15 @@
-{% extends "layout.html" %}
+{% extends "hotel_layout.html" %}
+<div>
+    <form action="" method=post class=search-hotel>
+		<li>destination:<input type=text size=20 name=destination value="">
+			start date:<input type=date name=start_date>
+			<input type=text size=30 name=search value="">&emsp;&emsp;
+			<input type=submit value=Search>
+	  </li>
+    </form>
+	<li align="left"><input type=button value=price></li>
+  </div>
+
 {% block body %}
   {% if session.manager %}
     <form action="{{ url_for('add_hotel') }}" method=post class=add-hotel enctype=multipart/form-data>

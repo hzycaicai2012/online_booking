@@ -12,6 +12,21 @@
     <a href="{{ url_for('logout') }}">log out</a>
   {% endif %}
   </div>
+  <div>
+    <form action="" method=post class=search-hotel>
+	  <li>destination:<input type=text size=10 name=destination value="">&emsp;
+			start date:<input type=date name=start_date>&emsp;
+			end date:<input type=date name=start_date>&emsp;
+			key word:<input type=text size=15 name=search value="">
+			<input type=submit value=Search>
+	  </li>
+    </form>
+	<li align="left"><input type=button value=price>&emsp;&emsp;
+	<input type=button value=star>&emsp;&emsp;
+	<input type=button value=hot>&emsp;&emsp;
+	<input type=button value=score></li>
+  </div>
+
   {% for message in get_flashed_messages() %}
     <div class=flash>{{ message }}</div>
   {% endfor %}

@@ -38,6 +38,13 @@ def index():
 	return render_template('index.html', hotel_info=hotel_info)
 
 
+@app.route('/hotel')
+def hotel():
+	error = None
+	hotel_info = db_session.query(Hotel.id, Hotel.name, Hotel.lowest_price,Hotel.hotel_pic,Hotel.score).all()
+	return render_template('hotel.html',hotel_info=hotel_info)
+
+
 @app.route('/hotel/add', methods=['POST'])
 def add_hotel():
 	if not session.get('manager'):
@@ -84,6 +91,35 @@ def update_hotel(hotel_id):
 
 	return render_template('hotel_update.html', hotel_detail = hotel_detail)
 
+@app.route('/hotel/<hotel_id>/add_room', methods=['POST'])
+def add_room(hotel_id):
+	if not session.get('manager'):
+		abort(401)
+	r = Room(hotel_id,
+			request.form['room_type'],
+			request.form['current_price'],
+			request.form['discount'])
+	db_session.add(r)
+	db_session.commit()
+	flash('New Room was posted successfully~~')
+	return redirect(url_for('hotel_detail',hotel_id=hotel_id))
+
+@app.route('/hotel/<hotel_id>/delete_room/<room_id>')
+def delete_room(hotel_id, room_id):
+	if not session.get('manager'):
+		abort(401)
+	db_session.query(Room).filter_by(id=room_id).delete()
+	db_session.commit()
+	flash('Room was deleted successfully~~')
+	return redirect(url_for('hotel_detail',hotel_id=hotel_id))
+
+@app.route('/hotel/detail/<hotel_id>')
+def hotel_detail(hotel_id):
+	if hotel_id <= 0:
+		abort(401)
+	hotel_detail = db_session.query(Hotel).filter_by(id=hotel_id).all()
+	room_detail = db_session.query(Room).filter_by(hotel_id=hotel_id).all()
+	return render_template('hotel_detail.html', hotel_detail = hotel_detail,hotelid = hotel_id,room_detail=room_detail)
 
 #@app.route('/search/hotel/<hotel_name>', methods=['GET','POST'])
 #def search_hotel(hotel_name):
@@ -99,12 +135,6 @@ def update_hotel(hotel_id):
 def update():
 	error = None
 
-@app.route('/hotel/detail/<hotel_id>')
-def hotel_detail(hotel_id):
-	if hotel_id <= 0:
-		abort(401)
-	hotel_detail = db_session.query(Hotel).filter_by(id=hotel_id).all()
-	return render_template('hotel_detail.html', hotel_detail = hotel_detail)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -141,11 +171,6 @@ def logout():
 	flash('You were logged out')
 	return redirect(url_for('index'))
 
-@app.route('/hotel')
-def hotel():
-	error = None
-	hotel_info = db_session.query(Hotel.id, Hotel.name, Hotel.lowest_price,Hotel.hotel_pic,Hotel.score).all()
-	return render_template('hotel.html',hotel_info=hotel_info)
 
 
 if __name__ == '__main__':
