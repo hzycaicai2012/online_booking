@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block body %}
+  <ul class=entries>
+  {% for hotel in hotel_detail %}
+  <li><h2>{{ hotel.name }}</h2></li>
+  <li>Location:{{ hotel.location }}</li>
+  <li>Star level:{{ hotel.star }}&emsp;&emsp;&emsp;&emsp;
+	  Score:{{ hotel.score }}</li>
+  <li>Tel:{{ hotel.telphone }}</li>
+  <li><img src="{{ url_for('static', filename='img/'+hotel.hotel_pic) }}" /></li>
+  <li>{{ hotel.detail|safe }}
+  {% endfor %}
+
+  {% if session.manager %}
+    <form action="{{ url_for('add_room', hotel_id=hotelid) }}" method=post class=add-room>
+      <dl>
+        <dt>Room type:
+		<dd><input type=text size=30 name=room_type value="">
+		<dt>Price:
+        <dd><input type=text size=30 name=current_price value="">
+		<dt>Discount:
+        <dd><input type=text size=30 name=discount value="">
+        <dd><input type=submit value=AddRoom>
+      </dl>
+    </form>
+	{% endif %}
+
+    {% for room  in room_detail %}
+	<li>Room type:{{ room.room_type }}&emsp;
+		Remain:   {{ room.occupied  }}&emsp;
+		Price :   {{ room.current_price}}&emsp;
+		Discount: {{ room.discount  }}
+		<a href="{{ url_for('delete_room',hotel_id=room.hotel_id,room_id=room.id)}}">Delete</a>
+	</li>
+	{% else %}
+	<li> <em>No Rooms here so far!</em> 
+	{% endfor %}
+  </ul>
+{% endblock %}

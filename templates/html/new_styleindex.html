@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Online Booking</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+  <script type="text/javascript" src="../static/modernizr-1.5.min.js"></script>
+</head>
+<body>
+
+  <div id="main">
+    <header>
+	<div id="logo"><h1><a href="#">Online&nbsp;Book</a></h1></div>
+      <nav>
+        <ul class="lavaLampWithImage" id="lava_menu">
+          <li class="current"><a href="index.html">home</a></li>
+          <li><a href="examples.html">Hotel</a></li>
+          <li><a href="examples.html">Flight</a></li>
+		    {% if not session.logged_in %}
+			<li><a href="{{ url_for('login') }}">Log in</a></li>
+			{% else %}
+			<li><a href="{{ url_for('logout') }}">Log out</a></li>
+			{% endif %}
+        </ul>
+      </nav>
+    </header>
+
+
+    <div id="site_content">
+      <div id="sidebar_container">
+        <div class="sidebar">
+          <h3>Latest News</h3>
+          <h4>New Website Launched</h4>
+          <h5>January 1st, 2012</h5>
+        </div>
+       </div>
+      <div id="content">
+		<div>
+			<form action="" method=post class=search-hotel>
+			<p height="50px"> destination:<input type=text size=10 name=destination value="">&emsp;
+			start date:<input type=date name=start_date>&emsp;
+			end date:<input type=date name=start_date>&emsp;</p>
+			<p>key word:&emsp;<input type=text size=15 name=search value="">
+			<input type=submit value=Search></p>
+			</form>
+		</div>
+		<ul>
+		<p></p>
+  		{% for info in hotel_info %}
+  		<p align="left"><a href="{{ url_for('hotel_detail',hotel_id=info.id)}}">{{ info.name }}</a></p>
+  		{% if session.manager %}
+  		<p align="right"><a href="{{ url_for('update_hotel', hotel_id=info.id) }}">Delete</a>
+  		  				<a href="{{ url_for('update_hotel', hotel_id=info.id) }}">Edit</a></p>
+  		{% endif %}
+  		<div>
+  		    <img align="center" src="{{ url_for('static', filename='img/'+info.hotel_pic) }}"/>
+				&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+  				&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+  				&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+			Score:{{ info.score|safe }}&emsp;
+			Lowest price:{{ info.lowest_price }}&emsp;
+			<a href="{{ url_for('hotel_detail',hotel_id=info.id)}}">Book now</a>
+  		</div>
+  		{% else %}
+  		  <p><em>Unbelievable.  No hotels here so far</em>
+  		{% endfor %}
+  		</ul>
+      </div>
+    </div>
+    <footer>
+      <p>&copy; 2013 HZY ZJU  All Rights Reserved. </p>
+    </footer>
+  </div>
+  <!-- javascript at the bottom for fast page loading -->
+  <script type="text/javascript" src="../static/jquery.min.js"></script>
+  <script type="text/javascript" src="../static/jquery.easing.min.js"></script>
+  <script type="text/javascript" src="../static/jquery.lavalamp.min.js"></script>
+  <script type="text/javascript" src="../static/image_fade.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      $("#lava_menu").lavaLamp({
+        fx: "backout",
+        speed: 700
+      });
+    });
+  </script>
+</body>
+</html>

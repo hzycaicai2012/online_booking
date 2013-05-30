@@ -1,0 +1,25 @@
+{% extends "hotel_layout.html" %}
+{% block body %}
+<ul class=entries>
+  <div id="hotellist">
+  {% for info in hotel_info %}
+	<div class="hotelInfo">
+	<li><h2><a href="{{ url_for('hotel_detail',hotel_id=info.id)}}">{{ info.name }}</a></h2></li>
+	<li>
+	<p class="rw1"><img align="top" src="{{ url_for('static', filename='img/'+info.hotel_pic) }}"/></p>
+	<p class="rw2">	Score:{{ info.score|safe }}</p>
+		Lowest price:{{ info.lowest_price }}&emsp;
+		{% if session.manager %}
+			<a href="{{ url_for('update_hotel', hotel_id=info.id) }}">Delete</a>&emsp;
+			<a href="{{ url_for('update_hotel', hotel_id=info.id) }}">Edit</a>
+		{% else %}
+			<a href="{{ url_for('hotel_detail',hotel_id=info.id)}}">Book now</a>
+		{% endif %}
+	</li>
+	</div>
+  {% else %}
+	<li><em>Unbelievable.  No hotels here so far</em>
+  {% endfor %}
+</div>
+  </ul>
+{% endblock %}

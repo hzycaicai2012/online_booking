@@ -13,15 +13,15 @@
     <a href="{{ url_for('logout') }}">log out</a>
   {% endif %}
   {% if session.manager %}
-    <a href="{{ url_for('add_hotel') }}">add hotel</a>
+    <a href="{{ url_for('add_flight') }}">add flight</a>
   {% endif %}
   </div>
   <div>
-	  <form action="{{ url_for('search_hotel')}}" method=post class=search-hotel>
+	<form action="" method=post class=search-hotel>
 	  <p>destination:<input type=text size=10 name=destination value="">&emsp;
 		start date:<input type=date name=start_date>&emsp;
 		end date:<input type=date name=start_date></p>
-		<p>key word:<input type=text size=15 name=key value="">
+		<p>key word:<input type=text size=15 name=search value="">
 	  <input type=submit value=Search></p>
     </form>
  </div>

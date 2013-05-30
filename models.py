@@ -118,7 +118,7 @@ class Flight(Base):
 
 	def __init__(self,
 			company=None,
-			flight_id=None,
+			flight_num=None,
 			start_city=None,
 			stop_city=None,
 			start_time=None,
@@ -132,7 +132,7 @@ class Flight(Base):
 			score=0):
 
 		self.company=company
-		self.flight_id=flight_id
+		self.flight_num=flight_num
 		self.start_city=start_city
 		self.stop_city=stop_city
 		self.start_time=start_time
@@ -189,6 +189,25 @@ class Comment(Base):
 		self.order_id=order_id
 		self.content=content
 		self.score = score 
+
+	def __repr__(self):
+		return '%r' % (self.order_id)
+
+class Pre_order(Base):
+	__tablename__= 'pre_order'
+	order_id = Column(String(20),primary_key=True)
+	user_id = Column(Integer,nullable=False)
+	start_date = Column(String(20),nullable=False)
+	end_date =  Column(String(20),nullable=False)
+	def __init__(self,
+			order_id = None,
+			user_id=None,
+			start_date=None,
+			end_date=None):
+		self.order_id=order_id
+		self.user_id=user_id
+		self.start_date = start_date 
+		self.end_date = end_date 
 
 	def __repr__(self):
 		return '%r' % (self.order_id)

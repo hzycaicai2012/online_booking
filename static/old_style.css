@@ -1,0 +1,55 @@
+body            { font-family: sans-serif; background: #eee; }
+a, h1, h2 ,h3      { color: #377BA8; }
+h1, h2 ,h3         { font-family: 'Georgia', serif; margin: 0; }
+h1              { border-bottom: 2px solid #eee; }
+h2              { font-size: 1.2em; }
+h3              { font-size: 1.0em; }
+h4              { font-size: 0.8em; }
+
+.page           { margin: 2em auto; width: 46em; border: 5px solid #ccc;
+                  padding: 0.8em; background: white; }
+.entries        { list-style: none; margin: 0; padding: 0; }
+.entries li     { margin: 0.8em 1.0em; }
+.entries li .button {width:90px; height:36px; display:inline-block;text-align:center;
+					background:url(../static/book.png)}
+
+.entries li h2  { margin-left: -1em; }
+.entries li.room_info{border-bottom:1px solid #e2e2e2;padding:10px 0;height:auto;overflow:auto;display:inline-block;clear:left}
+.entries li p{float:left}
+.entries li p.rw1{width:70px;height:70px;overflow:hidden;cursor:pointer}
+.entries li p.rw2{width:170px;margin:18px}
+.entries li p.rw3{width:95px;text-align:center;color:#555}
+.entries li p.rw4{width:95px;text-align:right;padding-right:10px}
+.entries li p.rw5{width:65px}
+.entries li p.rw6{width:48px;text-align:center}
+.entries li p.rw7{width:73px;text-align:right}
+.entries li p.rw1 img:hover{filter:alpha(opacity=80);opacity:.8}
+.entries li h3  { margin-left: -1em; }
+.entries .hotelinfo li.room_info{border-bottom:1px solid #e2e2e2;padding:10px 0;height:auto;overflow:auto;display:inline-block;clear:left}
+.entries .hotelinfo li p{float:left}
+.entries .hotelinfo li p.rw1{width:70px;height:70px;overflow:hidden;cursor:pointer}
+.entries .hotelinfo li p.rw2{width:170px;margin:18px}
+.entries .hotelinfo li p.rw3{width:95px;text-align:center;color:#555}
+.entries .hotelinfo li p.rw4{width:95px;text-align:right;padding-right:10px}
+.entries .hotelinfo li p.rw5{width:65px}
+.entries .hotelinfo li p.rw6{width:48px;text-align:center}
+.entries .hotelinfo li p.rw7{width:73px;text-align:right}
+.entries .hotelinfo li p.rw1 img:hover{filter:alpha(opacity=80);opacity:.8}
+.entries .hotelinfo li h3  { margin-left: -1em; }
+
+.add-entry      { font-size: 0.9em; border-bottom: 1px solid #ccc; }
+.add-entry dl   { font-weight: bold; }
+.metanav        { text-align: right; font-size: 0.8em; padding: 0.3em;
+                  margin-bottom: 1em; background: #fafafa; }
+
+.roommeta  { text-align: center}
+.roommeta p{float:left; background: #fffaaa; text-align:center;padding:10px}
+.roommeta p.rw2{text-align:left;width:280px;font-size:1.2em}
+.roommeta p.rw3{width:70px;font-size:1.2em}
+.roommeta p.rw4{width:90px;font-size:1.2em}
+
+.hotelmeta       { text-align: left; padding: 0.3em;
+                  margin-bottom: 1em; background: #87ceeb; }
+.flash          { background: #CEE5F5; padding: 0.5em;
+                  border: 1px solid #AACBE2; }
+.error          { background: #F0D6D6; padding: 0.5em; }

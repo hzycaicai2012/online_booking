@@ -1,0 +1,51 @@
+{% extends "hotel_layout.html" %}
+<div>
+    <form action="" method=post class=search-hotel>
+		<li>destination:<input type=text size=20 name=destination value="">
+			start date:<input type=date name=start_date>
+			<input type=text size=30 name=search value="">&emsp;&emsp;
+			<input type=submit value=Search>
+	  </li>
+    </form>
+	<li align="left"><input type=button value=price></li>
+  </div>
+
+{% block body %}
+  {% if session.manager %}
+    <form action="{{ url_for('add_hotel') }}" method=post class=add-hotel enctype=multipart/form-data>
+      <dl>
+        <dt>Name:
+        <dd><input type=text size=30 name=name>
+		<dt>City:
+        <dd><input type=text size=30 name=city>
+		<dt>Location:
+        <dd><input type=text size=30 name=location>
+		<dt>Telphone:
+        <dd><input type=text size=30 name=telphone>
+		<dt>Lowest price:
+        <dd><input type=text size=30 name=lowest_price>
+		<dt>Hotel picture:
+        <dd><input type=file size=30 name=hotel_pic>
+        <dt>Detail:
+        <dd><textarea name=detail rows=5 cols=40></textarea>
+        <dd><input type=submit value=Add>
+      </dl>
+    </form>
+  {% endif %}
+  <ul class=entries>
+  {% for info in hotel_info %}
+  <li><h2><a href="{{ url_for('hotel_detail',hotel_id=info.id)}}">{{ info.name }}</a></h2></li>
+  {% if session.manager %}
+  <li align="right"><a href="{{ url_for('update_hotel', hotel_id=info.id) }}">Edit</a></li>
+  {% endif %}
+  <li><img src="{{ url_for('static', filename='img/'+info.hotel_pic) }}" href="{{ url_for('hotel_detail',hotel_id=info.id)}}"/>
+  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+  Score:
+  {{ info.score|safe }}&emsp;&emsp;
+  Lowest price:
+  {{ info.lowest_price }}</li>
+  {% else %}
+    <li><em>Unbelievable.  No hotels here so far</em>
+  {% endfor %}
+  </ul>
+{% endblock %}

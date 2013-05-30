@@ -1,0 +1,29 @@
+{% extends "flight_layout.html" %}
+{% block body %}
+<ul class=entries>
+  <div id="hotellist">
+  {% for flight in flight_info %}
+	<div class="hotelInfo">
+	<li><h2>{{ flight.company }}</a></h2></li>
+	<li>
+	<img align="top" src="{{ url_for('static', filename='flight.JPG') }}"/></li>
+	<li>
+		Flight Num:{{ flight.flight_num|safe }}&emsp;&emsp;&emsp;
+		start time:{{ flight.start_time }}&emsp;&emsp;&emsp;
+		start airport:{{ flight.start_airport }}&emsp;&emsp;&emsp;
+		{% if session.manager %}
+			<a href="{{ url_for('update_flight', flight_id=flight.id) }}">Delete</a>&emsp;
+			<a href="{{ url_for('update_flight', flight_id=flight.id) }}">Edit</a>
+		{% endif %}
+		&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+		stop_time:{{ flight.stop_time }}&emsp;&emsp;&emsp;
+		stop_airport:{{ flight.stop_airport }}&emsp;&emsp;&emsp;
+		<a href="{{ url_for('hotel_detail',hotel_id=flight.id)}}">Book now</a>
+	</li>
+	</div>
+  {% else %}
+	<li><em>Unbelievable.  No flights here so far</em>
+  {% endfor %}
+</div>
+  </ul>
+{% endblock %}

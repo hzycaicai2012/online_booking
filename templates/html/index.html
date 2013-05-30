@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block body %}
+<div>
+    <form action="" method=post class=search-hotel>
+	  <p>destination:<input type=text size=10 name=destination value="">&emsp;
+	  start date:<input type=date name=start_date>&emsp;
+	  end date:<input type=date name=start_date>&emsp;
+	  key word:<input type=text size=15 name=search value="">
+	  <input type=submit value=Search></p>
+    </form>
+  </div>
+  <ul class=entries>
+  {% for info in hotel_info %}
+  <li><h2><a href="{{ url_for('hotel_detail',hotel_id=info.id)}}">{{ info.name }}</a></h2></li>
+  {% if session.manager %}
+  <li align="right"><a href="{{ url_for('update_hotel', hotel_id=info.id) }}">Delete</a>
+					<a href="{{ url_for('update_hotel', hotel_id=info.id) }}">Edit</a></li>
+  {% endif %}
+  <div>
+	  <img align="top" src="{{ url_for('static', filename='img/'+info.hotel_pic) }}"/>
+  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+  Score:
+  {{ info.score|safe }}&emsp;&emsp;
+  Lowest price:
+  {{ info.lowest_price }}
+  <a href="{{ url_for('hotel_detail',hotel_id=info.id)}}">Book now</a>
+  </div>
+  {% else %}
+    <li><em>Unbelievable.  No hotels here so far</em>
+  {% endfor %}
+  </ul>
+{% endblock %}

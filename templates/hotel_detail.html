@@ -1,39 +1,65 @@
-{% extends "layout.html" %}
+{% extends "hotel_layout.html" %}
 {% block body %}
   <ul class=entries>
   {% for hotel in hotel_detail %}
-  <li><h2>{{ hotel.name }}</h2></li>
-  <li>Location:{{ hotel.location }}</li>
-  <li>Star level:{{ hotel.star }}&emsp;&emsp;&emsp;&emsp;
-	  Score:{{ hotel.score }}</li>
-  <li>Tel:{{ hotel.telphone }}</li>
+  <div class=hotelmeta>	
+  <h2>{{ hotel.name }}</h2></div>
+  <fieldset>
+  <li><b>Location:</b>{{ hotel.location }}&emsp;&emsp;&emsp;&emsp;
+  <b>Star level:</b>{{ hotel.star }}&emsp;&emsp;&emsp;&emsp;
+  <b>Score:</b>{{ hotel.score }}&emsp;&emsp;&emsp;&emsp;
+  <b>Tel:</b>{{ hotel.telphone }}</li>
   <li><img src="{{ url_for('static', filename='img/'+hotel.hotel_pic) }}" /></li>
-  <li>{{ hotel.detail|safe }}
+  </fieldset>
+  </ul>
+  <ul class=entries>
+	<div class=roommeta>	
+		<h3>
+		<p class="rw2">Room type:</p>
+		<p class="rw3">Remain:</p>
+		<p class="rw3">Price:</p>
+		<p class="rw3">Discount:</p>
+		<p class="rw4">&nbsp;</p>
+		</h3>
+	</div>
+	{% for room  in room_detail%}
+	<li class="room_info">
+	<p class="rw1" align="bottom"><img src="{{ url_for('static', filename='room.jpg') }}" /></p>
+	<p class="rw2">{{ room.room_type }}</p>
+	<p class="rw3">{{ room.capacity-room.occupied  }}</p>
+	<p class="rw3">{{ room.current_price}}</p>
+	<p class="rw3">{{ room.discount  }}</p>
+		{% if session.manager %}
+		<a href="{{ url_for('delete_room',hotel_id=room.hotel_id,room_id=room.id)}}">Delete</a>
+		{% else %}
+		<p class="rw4"><a href="" class="button"></a></p>
+		{% endif %}
+	</li>
+	{% else %}
+	<li> <em>No Rooms here so far!</em> 
+	{% endfor %}
+	<li><h3>Detail:</h3>{{ hotel.detail_info|safe }}</li>
   {% endfor %}
-
   {% if session.manager %}
     <form action="{{ url_for('add_room', hotel_id=hotelid) }}" method=post class=add-room>
-      <dl>
+	<fieldset>
+		<legend>Room add</legend>
+	<dl >
         <dt>Room type:
-		<dd><input type=text size=30 name=room_type value="">
+		<dd>
+		<select name=room_type style="text-align:center">
+			<option value="  Big Bed Room">Big</option>
+			<option value="Double Bed Room">Double</option>
+			<option value="Single Bed Room">Single</option>
+		</select>
 		<dt>Price:
         <dd><input type=text size=30 name=current_price value="">
 		<dt>Discount:
         <dd><input type=text size=30 name=discount value="">
         <dd><input type=submit value=AddRoom>
       </dl>
+	</fieldset>
     </form>
 	{% endif %}
-
-    {% for room  in room_detail %}
-	<li>Room type:{{ room.room_type }}&emsp;
-		Remain:   {{ room.occupied  }}&emsp;
-		Price :   {{ room.current_price}}&emsp;
-		Discount: {{ room.discount  }}
-		<a href="{{ url_for('delete_room',hotel_id=room.hotel_id,room_id=room.id)}}">Delete</a>
-	</li>
-	{% else %}
-	<li> <em>No Rooms here so far!</em> 
-	{% endfor %}
-  </ul>
+ </ul>
 {% endblock %}

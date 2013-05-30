@@ -1,0 +1,8 @@
+{% extends "layout.html" %}
+{% block body %}
+  <ul class=entries>
+  {% for blog in blog_detail %}
+    <li><h2>{{ blog.title }}</h2>{{ blog.contents|safe }}
+  {% endfor %}
+  </ul>
+{% endblock %}
