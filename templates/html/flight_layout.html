@@ -1,0 +1,33 @@
+<!doctype html>
+<title>Online_Booking</title>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='old_style.css') }}">
+<div class=page>
+  <h1>Online_Booking</h1>
+  <div class=metanav>
+    <a href="{{ url_for('index') }}">index</a>
+    <a href="{{ url_for('hotel') }}">hotel</a>
+    <a href="{{ url_for('flight') }}">flight</a>
+  {% if not session.logged_in %}
+    <a href="{{ url_for('login') }}">log in</a>
+  {% else %}
+    <a href="{{ url_for('logout') }}">log out</a>
+  {% endif %}
+  {% if session.manager %}
+    <a href="{{ url_for('add_flight') }}">add flight</a>
+  {% endif %}
+  </div>
+  <div>
+	<form action="" method=post class=search-hotel>
+	  <p>destination:<input type=text size=10 name=destination value="">&emsp;
+		start date:<input type=date name=start_date>&emsp;
+		end date:<input type=date name=start_date></p>
+		<p>key word:<input type=text size=15 name=search value="">
+	  <input type=submit value=Search></p>
+    </form>
+ </div>
+
+  {% for message in get_flashed_messages() %}
+    <div class=flash>{{ message }}</div>
+  {% endfor %}
+  {% block body %}{% endblock %}
+</div>

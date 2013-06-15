@@ -1,0 +1,59 @@
+{% extends "hotel_layout.html" %}
+{% block body %}
+<ul class=entries>
+  {% for info in hotel_info %}
+  <fieldset>
+  <div class="hotelinfo">
+	  <li class="hotelname"><h2><a href="{{ url_for('hotel_detail',hotel_id=info.id)}}">{{ info.name }}</a></h2></li>
+	<div>
+		<img align="top" src="{{ url_for('static', filename='img/'+info.hotel_pic) }}"/>
+				&emsp;
+		Location:{{ info.city }}
+		Score:{{ info.score|safe }}&emsp;
+		Lowest price:{{ info.lowest_price }}&emsp;
+		{% if session.manager %}
+			<a href="{{ url_for('update_hotel', hotel_id=info.id) }}">Delete</a>&emsp;
+			<a href="{{ url_for('update_hotel', hotel_id=info.id) }}">Edit</a>
+		{% endif %}
+	</div>
+	{% if room_info[info.id] %}
+	<div class=roommeta>	
+		<h3>
+		<p class="rw2">Room type:</p>
+		<p class="rw3">Remain:</p>
+		<p class="rw3">Price:</p>
+		<p class="rw3">Discount:</p>
+		<p class="rw4">&nbsp;</p>
+		</h3>
+	</div>
+	{% for room in room_info[info.id] %}
+	<li class="room_info">
+		<p class="rw1" align="bottom"><img src="{{ url_for('static', filename='room.jpg') }}" /></p>
+		<p class="rw2">{{ room.room_type }}</p>
+		<p class="rw3">{{ room.capacity - room.occupied}}</p>
+		<p class="rw3">{{ room.current_price}}</p>
+		<p class="rw3">{{ room.discount  }}</p>
+		<p class="rw4"><a href="" class="button"></a></p>
+	</li>
+	{% endfor %}
+	{% endif %}
+	</div>
+</fieldset>
+  {% else %}
+	<li><em>Unbelievable.  No hotels here so far</em>
+  {% endfor %}
+  </ul>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+

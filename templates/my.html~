@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+    <!-- Meta, title, CSS, favicons, etc. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="This is a website for hotel and flight booking~">
+<meta name="author" content="HZY@ZJU in 2013">
+
+<title>
+  
+   Online Booking
+  
+</title>
+  <head>
+    <title>Online Booking</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" media="screen">
+	
+  </head>
+<body>
+<script type=text/javascript>
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
+<style>
+.container .row .span4 ul.unstyled li span{
+	float:left;width:60px;text-align:center
+  }
+  
+.container .row .span4 ul.unstyled li span.city{
+	float:left;width:80px;text-align:center
+  }
+
+.container .row .span4 ul.unstyled li span.discount{
+	float:left;width:50px;text-align:center
+  }
+  
+.container .row .span4 ul.unstyled li span.price {
+	color:#f60;font-family:Arial;font-size:14px; width:45px;
+  }
+  
+.container .row .span4 .whyus{font:14px "Microsoft Yahei",Simsun;color:#666;float:left}
+.container .row .span4 .whyus h3{font-size:24px;color:#a25005;margin-bottom:15px}
+.container .row .span4 .whyus dt{height:30px;line-height:30px;font-size:16px;color:#e27720;font-weight:700}
+.container .row .span4 .whyus dt i{display:inline-block;width:26px;height:26px;margin-right:5px;background:url(newindex.png?t=201305301433) no-repeat -183px -54px;vertical-align:-5px}
+.container .row .span4 .whyus dd{padding-left:31px;margin-bottom:10px}
+.container .row .span4 .tabbable ul.nav li.flight h2{background:#f8f8f8;font:14px Microsoft Yahei,\5b8b\4f53;font-weight:400}
+.footer {
+  text-align: center;
+  padding: 30px 0;
+  margin-top: 70px;
+  border-top: 1px solid #e5e5e5;
+  background-color: #f5f5f5;
+}
+.footer p {
+  margin-bottom: 0;
+  color: #777;
+}
+.footer-links {
+  margin: 10px 0;
+}
+.footer-links li {
+  display: inline;
+  padding: 0 2px;
+}
+ </style>
+<p>&nbsp;</p>
+<div class="container">
+	<div class="row">
+		<div class="span12">
+			<div class="navbar navbar-inverse">
+				<div class="navbar-inner">
+					<div class="container-fluid">
+						 <a data-target=".navbar-responsive-collapse" data-toggle="collapse" class="btn btn-navbar"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a> <a href="#" class="brand">OnlineBooking</a>
+						<div class="nav-collapse collapse navbar-responsive-collapse">
+							<ul class="nav">
+								<li class="active">
+								<a href="{{ url_for('index') }}">主页</a>
+								</li>
+								<li>
+								<a href="{{ url_for('hotel') }}">酒店预订</a>
+								</li>
+								<li>
+									<a href="{{ url_for('hotel') }}">特价酒店</a>
+								</li>
+								<li>
+									<a href="{{ url_for('flight') }}">航班预订</a>
+								</li>
+							</ul>
+							<ul class="nav pull-right">
+								<li class="dropdown">
+									 <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-user icon-white"></i> 我的账户<strong class="caret"></strong></a>
+									<ul class="dropdown-menu">
+										{% if not session.logged_in %}
+										<li>
+										<a href="{{ url_for('login') }}">登录</a>
+										</li>
+										{% else %}
+										<li>
+										<a href="{{ url_for('logout') }}">注销</a>
+										</li>
+										{% endif %}
+										<li>
+											<a href="#">其他</a>
+										</li>
+										<li class="divider">
+										</li>
+										{% for order in pre_order %}
+										<li>
+											<a href="#">{{ order.order_id }}</a>
+										</li>
+										{% endfor %}
+										{% if session.manager %}
+   										  <li><a href="{{ url_for('add_hotel') }}">添加酒店</a></li>
+									          <li><a href="{{ url_for('add_flight') }}">添加航班</a></li>
+									       {% endif %}
+									</ul>
+								</li>
+							</ul>
+						</div>
+						
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		
+		<div class="span4">
+			<div class="tabbable" id="tabs-418355">
+				<ul class="nav nav-tabs">
+					<li>
+						<a href="#panel-841925" data-toggle="tab"><i class="icon-home"></i> 酒店查询</a>
+					</li>
+					<li class="active">
+						<a href="#panel-705972" data-toggle="tab"><i class="icon-plane"></i> 航班查询</a>
+					</li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane" id="panel-841925">
+						<p>
+						<form action="{{ url_for('search_hotel')}}" method="post" class="search-hotel">
+								<fieldset>
+								<div class="input-prepend">
+									<span class="add-on">&nbsp;&nbsp;&nbsp;&nbsp;目的地: </span>
+										<input class="span3" id="prependedInput" type="text" name="city" placeholder="杭州">
+								</div>
+								<div class="input-prepend">
+									<span class="add-on">入住日期: </span>
+										<input class="span3" id="prependedInput" type="text" name="start_date" placeholder="">
+								</div>
+								<div class="input-prepend">
+									<span class="add-on">退房日期: </span>
+										<input class="span3" id="prependedInput" type="text" name="end_date" placeholder="">
+								</div>
+								<div class="input-prepend">
+									<span class="add-on">&nbsp;&nbsp;&nbsp;&nbsp;关键字: </span>
+										<input class="span3" id="prependedInput" type="text" name="key" placeholder="输入位置 酒店名 或品牌">
+								</div>
+								<div align="center" >
+								<button class="btn btn-primary" type="submit">搜索</button>
+								</div>
+								</fieldset>
+							</form>
+						</p>
+					</div>
+					<div class="tab-pane active" id="panel-705972">
+						<p>
+							<form>
+								<fieldset>
+								<div class="input-prepend">
+									<span class="add-on">出发城市: </span>
+										<input class="span3" id="prependedInput" type="text" placeholder="杭州">
+								</div>
+								<div class="input-prepend">
+									<span class="add-on">到达城市: </span>
+										<input class="span3" id="prependedInput" type="text" placeholder="">
+								</div>
+								<div class="input-prepend">
+									<span class="add-on">出发日期: </span>
+										<input class="span3" id="prependedInput" type="text" placeholder="">
+								</div>
+								<div class="input-prepend">
+									<span class="add-on">舱位等级: </span>
+										<input class="span3" id="prependedInput" type="text" placeholder="输入位置 酒店名 或品牌">
+								</div>
+								<div align="center" >
+								<button class="btn btn-primary" type="button" type="submit">搜索</button>
+								</div>
+								</fieldset>
+							</form>
+						</p>
+					</div>
+				</div>
+			</div>
+			<div>
+			<img alt="140x140" src="{{ url_for('static', filename='image/201304011index.png') }}" class="img-rounded" />
+			</div>
+		</div>
+		<div class="span8">
+			<div class="carousel slide" id="carousel-517565">
+				<ol class="carousel-indicators">
+					<li data-slide-to="0" data-target="#carousel-517565"  class="active">
+					</li>
+					<li data-slide-to="1" data-target="#carousel-517565">
+					</li>
+					<li data-slide-to="2" data-target="#carousel-517565">
+					</li>
+					<li data-slide-to="3" data-target="#carousel-517565">
+					</li>
+					<li data-slide-to="4" data-target="#carousel-517565">
+					</li>
+				</ol>
+				<div class="carousel-inner">
+					<div class="item active">
+						<img alt="" src="{{ url_for('static', filename='image/11.jpg') }}" />
+					</div>
+					<div class="item">
+						<img alt="" src="{{ url_for('static', filename='image/22.jpg') }}" />
+					</div>
+					<div class="item">
+						<img alt="" src="{{ url_for('static', filename='image/33.jpg') }}" />
+					</div>
+					<div class="item">
+						<img alt="" src="{{ url_for('static', filename='image/130314_index_s4.jpg') }}" />
+					</div>
+					<div class="item">
+						<img alt="" src="{{ url_for('static', filename='image/guoji20130318.jpg') }}" />
+					</div>
+				</div> <a data-slide="prev" href="#carousel-517565" class="left carousel-control">‹</a> <a data-slide="next" href="#carousel-517565" class="right carousel-control">›</a>
+			</div>
+			<div>
+			<img alt="140x140" src="{{ url_for('static', filename='image/price.gif') }}" class="img-rounded" />
+			</div>
+		</div>
+	</div>
+	<p>&nbsp</p>
+	<div class="row">
+		<div class="span4">
+			<div class="whyus">
+              <h3>为什么选择易付通？</h3>
+              <dl>
+                <dt><i></i>更多酒店</dt>
+                <dd>提供全球二十万家酒店预订服务</dd>
+                <dt><i></i>更多优惠</dt>
+                <dd>酒店团购第一，近万家酒店一折起；国际酒店全场9折；千家高星酒店6折限时抢；订酒店返现金高达20%</dd>
+                <dt><i></i>更优服务</dt>
+                <dd>更优服务 连续6年中国最佳客服中心；7X24小时服务；<br>到店无房赔首晚房费</dd>
+                <dt><i></i>低价承诺</dt>
+                <dd>预订价高于酒店门市价，3倍差额赔付</dd>
+              </dl>
+            </div>
+			<p>&nbsp</p>
+             
+			<ul class="nav nav-tabs" id="tejia">
+                  <li><a href=""><i class="icon-plane"></i> 特价机票</a></li>
+                  <li><a href="#"><small>北京</small></a></li>
+                  <li><a href="#"><small>上海</small></a></li>
+                  <li class="dropdown"> <a href="#" data-toggle="dropdown" class="dropdown-toggle"><small>更多</small><b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                      <li><a href="#">广州</a></li>
+                      <li><a href="#">杭州</a></li>
+                      <li><a href="#">深圳</a></li>
+                      <li><a href="#">成都</a></li>
+                    </ul>
+                 </li>
+            </ul>
+			<ul class="unstyled" contenteditable="true">
+				<li>
+					<span class="price"><small>194</small></span>
+					<span><small>06月15日</small></span>
+					<span class="city"><small>北京-上海</small></span>
+					<span class="discount"><small>折扣</small></span>
+					<span><a href=""><small>查看>></small></a></span>
+				</li>
+				<li>
+					<span class="price"><small>194</small></span>
+					<span><small>06月15日</small></span>
+					<span class="city"><small>北京-上海</small></span>
+					<span class="discount"><small>折扣</small></span>
+					<span><a href=""><small>查看>></small></a></span>
+				</li>
+				<li>
+					<span class="price"><small>194</small></span>
+					<span><small>06月15日</small></span>
+					<span class="city"><small>北京-上海</small></span>
+					<span class="discount"><small>折扣</small></span>
+					<span><a href=""><small>查看>></small></a></span>
+				</li>
+			</ul>
+		</div>
+		<div class="span8">
+			<ul class="nav nav-pills" id="hotCity">
+				<li class="active" id="button-nav">
+					<a>热门酒店</a>
+				</li>
+				<li class="" id="bj">
+					<a href="#">北京</a>
+				</li>
+				<li class="" id="sh">
+					<a href="#">上海</a>
+				</li>
+				<li class="">
+					<a href="#">广州</a>
+				</li>
+				<li class="">
+					<a href="#">杭州</a>
+				</li>
+				<li class="">
+					<a href="#">深圳</a>
+				</li>
+				<li class="">
+					<a href="#">成都</a>
+				</li>
+				<li class="">
+					<a href="#">纽约</a>
+				</li>
+				<li>
+					<a href="#">伦敦</a>
+				</li>
+
+				<li class="dropdown">
+					 <a href="#" data-toggle="dropdown" class="dropdown-toggle">更多<strong class="caret"></strong></a>
+					<ul class="dropdown-menu">
+						<li>
+							<a href="#">合肥</a>
+						</li>
+						<li>
+							<a href="#">芜湖</a>
+						</li>
+						<li>
+							<a href="#">天津</a>
+						</li>
+						<li>
+							<a href="#">香港</a>
+						</li>
+						<li>
+							<a href="#">澳门</a>
+						</li>
+						<li>
+							<a href="#">厦门</a>
+						</li>
+					</ul>
+				</li>
+			</ul>
+			<script>
+				$("#button-nav").click(function () {
+			      $(this).addClass("active");
+			    });
+			</script>
+			<table class="table table-hover">
+				<tbody>
+				{% for info in hotel_info %}
+					<tr>
+						<td width="20%">
+							<img alt="140x140" src="{{ url_for('static', filename='image/hotel1.jpg') }}" class="img-rounded" />
+						</td>
+						
+						<td width="57%">
+							<ol class="unstyled">
+								<li>
+									<h4>
+										{{ info.name }}<small>----星级</small>
+									</h4>
+								</li>
+								<li>
+								<small>{{ info.location }}</small>
+								</li>
+								<li>
+								<small>{{ info.score }}|评论数</small>
+								</li>
+								<li>
+									<small>最近评论</small>
+								</li>
+							</ol>
+						</td>
+						<td width="20%">
+							<div>{{ info.lowest_price }}元起！</div>
+							<a href="{{ url_for('hotel_detail',hotel_id=info.id)}}">
+								<button class="btn btn-primary" type="button">去看看</button></a>
+						</td>
+					</tr>
+					{% endfor %}
+					<tr>
+						<td width="20%">
+							<img alt="140x140" src="hotel2.jpg" class="img-rounded" />
+						</td>
+						
+						<td width="57%">
+							<div><h4>玉泉大酒店<small>----星级</small></h4></div>
+							<div><small>酒店位置</small></div>
+							<div><small>酒店位置</small></div>
+							<div><small>酒店位置</small></div>
+						</td>
+						<td width="20%">
+							<div>398元起！</div>
+							<button class="btn btn-primary" type="button">去看看</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<footer class="footer">
+      <div class="container">
+        <p>Designed and built with all the love in the world by HZY ZJU SE Team-A.</p>
+        <p><a href="http://glyphicons.com" target="_blank">Glyphicons Free</a> licensed under <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank">CC BY 3.0</a>.</p>
+        <ul class="footer-links">
+          <li><a href="" target="_blank">关于我们</a></li>
+          <li class="muted">|</li>
+          <li><a href="" target="_blank">服务条款</a></li>
+          <li class="muted">|</li>
+          <li><a href="">商务洽谈</a></li>
+		  <li class="muted">|</li>
+		  <li><a href="">加入我们</a></li>
+		  <li class="muted">|</li>
+		  <li><a href="">版权所有</a></li>
+          <li>&emsp;&emsp;Copyright &copy; 2012-2013 SE Team-A All Rights Reserved.</li>
+        </ul>
+      </div>
+    </footer>
+	
+<script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type=text/javascript>
+  $(function() {
+	$('#hotCity li').bind('click', function() {
+      $.getJSON($SCRIPT_ROOT + '/sort_hotel', {
+       a: $('input[name="a"]').val(),
+      b: $('input[name="b"]').val()
+	      }, function(data) {
+         $("#result").text(data.result);
+      });
+      return false;
+      });
+   });
+</script>
+  </body>
+</html>

@@ -6,7 +6,10 @@
 """
 from __future__ import with_statement
 import os
-from flask import Flask, request, session, g, redirect, url_for, abort, \
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+from flask import Flask, request, jsonify, session, g, redirect, url_for, abort, \
      render_template, flash, _app_ctx_stack, send_from_directory
 from models import *
 from database import *
@@ -19,11 +22,20 @@ app = Flask(__name__)
 #import the config
 app.config.from_object(Config)
 
+city_list = {
+		'bj' : '北京',
+		'sh' : '上海',
+		'hz' : '杭州',
+		'gz' : '广州',
+		'sz' : '深圳',
+		'cd' : '成都',
+		'ny' : '纽约',
+		'ld' : '伦敦'}
 
 #heck if an extension is valid
 def allowed_file(filename):
 	return '.' in filename and \
-			filename.rsplit('.', 1)[1] in Config.ALLOWED_EXTENSIONS
+		filename.rsplit('.', 1)[1] in Config.ALLOWED_EXTENSIONS
 
 
 #Closes the database again at the end of the request.
@@ -34,12 +46,18 @@ def shutdown_session(exception=None):
 
 @app.route('/')
 def index():
-	hotel_info = db_session.query(Hotel.id, Hotel.name, Hotel.lowest_price,Hotel.hotel_pic,Hotel.score).all()
-	room_info = {} 
-	for hotel in hotel_info:
-		room_info[hotel.id] = db_session.query(Room).filter_by(hotel_id=hotel.id).all()
-	return render_template('index.html', hotel_info=hotel_info, room_info=room_info)
+	hotel_info = db_session.query(Hotel).all()
+	pre_order = {}
+	if session.get('logged_in'):
+		pre_order = db_session.query(Pre_order).filter_by(user_id = 1).all()
+	#hotel_info = db_session.query(Hotel.id, Hotel.name, Hotel.lowest_price,Hotel.hotel_pic,Hotel.score).order_by(Hotel.name).all()
+	return render_template('my.html', hotel_info=hotel_info, pre_order=pre_order)
 
+@app.route('/sort_hotel')
+def sort_hotel():
+	#hotel_info = db_session.query(Hotel.id, Hotel.name, Hotel.lowest_price,Hotel.hotel_pic,Hotel.score).all()
+	hotel_info = db_session.query(Hotel.id, Hotel.name, Hotel.lowest_price,Hotel.hotel_pic,Hotel.score).order_by(Hotel.name).all()
+	return hotel_info
 
 @app.route('/hotel')
 def hotel():
@@ -48,7 +66,10 @@ def hotel():
 	room_info = {} 
 	for hotel in hotel_info:
 		room_info[hotel.id] = db_session.query(Room).filter_by(hotel_id=hotel.id).all()
-	return render_template('hotel.html',hotel_info=hotel_info, room_info = room_info)
+	pre_order = {}
+	if session.get('logged_in'):
+		pre_order = db_session.query(Pre_order).filter_by(user_id = 1).all()
+	return render_template('hotel.html',hotel_info=hotel_info, room_info = room_info, pre_order=pre_order)
 
 
 @app.route('/hotel/add', methods=['GET','POST'])
@@ -72,6 +93,36 @@ def add_hotel():
 		flash('New Hotel was posted successfully~~')
 		return redirect(url_for('hotel'))
 	return render_template('hotel_add.html')
+
+
+@app.route('/get_hotel')
+def get_hotel():
+	city = request.args.get('city')
+	if city == 'button-nav':
+		hotel_info = db_session.query(Hotel).all()
+	else:
+		city = city_list[city]
+		hotel_info = db_session.query(Hotel).filter_by(city=city).all()
+	html = u'<tbody>'
+	for info in hotel_info:
+		html = html + u'<tr> <td width="20%"><img alt="140x140" src="'
+		img = url_for('static', filename='img/'+info.name + '.jpg')
+		html = html + img
+		html = html + u'" class="img-round" /> </td>'
+		html = html + u'<td width=57%><ol class="unstyled"> <li> <h4>'+ info.name + '<small>----星级</small> </h4> </li>'
+		html = html + u'<li> <small>' + info.location +'</small> </li>'
+		html = html + u'<li> <small>' + str(info.score) +'|评论数</small></li><li><small>最近评论</small></li></ol></td>'
+		html = html + u'<td width="20%">	<div>' + str(info.lowest_price) + '元起！</div>'
+		if session.get('manager'):
+			url = url_for('update_hotel', hotel_id=info.id)
+			html = html + u'<a href="' + url + '"><button class="btn btn-primary" type="button">更新</button></a>'
+		else:
+			url = url_for('hotel_detail', hotel_id=info.id)
+			html = html + u'<a href="' + url + '"><button class="btn btn-primary" type="button">去看看</button></a>'
+		html = html + u'</td> </tr>'
+	html = html + u'</tbody>'
+	print html
+	return html 
 
 
 @app.route('/hotel/update/<hotel_id>', methods=['GET','POST'])
@@ -103,12 +154,16 @@ def update_hotel(hotel_id):
 @app.route('/hotel/search', methods=['POST'])
 def search_hotel():
 	error = None
-	key = request.form['key']
-	hotel_info = db_session.query(Hotel).filter_by(name=key).all()
+	key = '%' + request.form['key'] + '%'
+	hotel_info = db_session.query(Hotel).filter(Hotel.name.like(key)).all()
 	room_info = {} 
 	for hotel in hotel_info:
 		room_info[hotel.id] = db_session.query(Room).filter_by(hotel_id=hotel.id).all()
-	return render_template('hotel.html',hotel_info=hotel_info, room_info = room_info)
+	pre_order = {}
+	if session.get('logged_in'):
+		pre_order = db_session.query(Pre_order).filter_by(user_id = 1).all()
+
+	return render_template('hotel.html',hotel_info=hotel_info, room_info = room_info, pre_order=pre_order)
 
 
 @app.route('/hotel/<hotel_id>/add_room', methods=['POST'])
@@ -133,19 +188,44 @@ def delete_room(hotel_id, room_id):
 	flash('Room was deleted successfully~~')
 	return redirect(url_for('hotel_detail',hotel_id=hotel_id))
 
+
+@app.route('/hotel/book_room/<hotel_id>/<room_id>', methods=['POST'])
+def book_room(hotel_id, room_id):
+	order_id = "1-"+str(hotel_id)+"-"+str(room_id)
+	b = Pre_order(order_id, 1,
+				request.form['start_date'],
+				request.form['end_date'])
+	db_session.add(b)
+	db_session.commit()
+	hotel_detail = db_session.query(Hotel).filter_by(id=hotel_id).all()
+	room_detail = db_session.query(Room).filter_by(hotel_id=hotel_id).all()
+	pre_order = {}
+	if session.get('logged_in'):
+		pre_order = db_session.query(Pre_order).filter_by(user_id = 1).all()
+
+	return render_template('hotel_detail.html', hotel_detail = hotel_detail,hotelid = hotel_id,room_detail=room_detail, pre_order=pre_order)
+
 @app.route('/hotel/detail/<hotel_id>')
 def hotel_detail(hotel_id):
 	if hotel_id <= 0:
 		abort(401)
 	hotel_detail = db_session.query(Hotel).filter_by(id=hotel_id).all()
 	room_detail = db_session.query(Room).filter_by(hotel_id=hotel_id).all()
-	return render_template('hotel_detail.html', hotel_detail = hotel_detail,hotelid = hotel_id,room_detail=room_detail)
+	pre_order = {}
+	if session.get('logged_in'):
+		pre_order = db_session.query(Pre_order).filter_by(user_id = 1).all()
+
+	return render_template('hotel_detail.html', hotel_detail = hotel_detail,hotelid = hotel_id,room_detail=room_detail, pre_order=pre_order)
 
 @app.route('/flight')
 def flight():
 	error = None
 	flight_info = db_session.query(Flight).all()
-	return render_template('flight.html',flight_info=flight_info)
+	pre_order = {}
+	if session.get('logged_in'):
+		pre_order = db_session.query(Pre_order).filter_by(user_id = 1).all()
+
+	return render_template('flight.html',flight_info=flight_info, pre_order=pre_order)
 
 @app.route('/flight/add', methods=['GET','POST'])
 def add_flight():
@@ -231,7 +311,6 @@ def login():
 		else:
 			return render_template('login.html', error=error)
 	return render_template('login.html', error=error)
-
 
 @app.route('/logout')
 def logout():

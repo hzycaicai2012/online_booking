@@ -19,18 +19,6 @@ class User(Base):
 	def __repr__(self):
 		return '<User %r>' % (self.name)
 
-class Blog(Base):
-	__tablename__ = 'blog'
-	id = Column(Integer, primary_key=True)
-	title = Column(String(20), nullable=False)
-	contents = Column(String)
-
-	def __init__(self, title=None, contents=None):
-		self.title = title
-		self.contents = contents
-
-	def __repr__(self):
-		return '%r' % (self.title)
 
 class Hotel(Base):
 	__tablename__ = 'hotel'
@@ -69,6 +57,7 @@ class Hotel(Base):
 
 	def __repr__(self):
 		return '%r' % (self.name)
+
 
 class Room(Base):
 	__tablename__ = 'room'
@@ -176,26 +165,28 @@ class Cabin(Base):
 		return '%r' % (self.room_type)
 
 
-class Comment(Base):
-	__tablename__ = 'comment'
-	order_id = Column(Integer, primary_key=True, autoincrement=False)
-	content = Column(Text,nullable=False)
-	score = Column(Integer,nullable=False,default=5)
+#class Comment(Base):
+#	__tablename__ = 'comment'
+#	order_id = Column(Integer, primary_key=True)
+#	content = Column(Text,nullable=False)
+#	score = Column(Integer,nullable=False,default=5)
+#
+#	def __init__(self,
+#			order_id = None,
+#			content=None,
+#			score=5):
+#		self.order_id=order_id
+#		self.content=content
+#		self.score = score 
+#
+#	def __repr__(self):
+#		return '%r' % (self.order_id)
 
-	def __init__(self,
-			order_id = None,
-			content=None,
-			score=5):
-		self.order_id=order_id
-		self.content=content
-		self.score = score 
-
-	def __repr__(self):
-		return '%r' % (self.order_id)
 
 class Pre_order(Base):
 	__tablename__= 'pre_order'
-	order_id = Column(String(20),primary_key=True)
+	id = Column(Integer, primary_key=True)
+	order_id = Column(String(20),nullable=False)
 	user_id = Column(Integer,nullable=False)
 	start_date = Column(String(20),nullable=False)
 	end_date =  Column(String(20),nullable=False)

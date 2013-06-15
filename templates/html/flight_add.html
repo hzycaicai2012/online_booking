@@ -1,0 +1,71 @@
+{% extends "flight_layout.html" %}
+{% block body %}
+{% if session.manager %}
+    <form action="{{ url_for('add_flight') }}" method=post class=add-flight>
+		<fieldset>
+      <dl>
+        <dt>Company:
+		<dd>
+		<select name=company style="text-align:center">
+			<option value="South Air">South Air Company</option>
+			<option value="North Air">North Air Company</option>
+			<option value="China Air">China Air Company</option>
+			<option value="Hangzhou Air">Hangzhou Air Company</option>
+		</select>
+		<dt>Flight_num:
+        <dd><input type=text size=30 name=flight_num>
+		<dt>Start city:
+		<dd>
+		<select name=start_city style="text-align:center">
+			<option value="Hangzhou">Hangzhou</option>
+			<option value="Shanghai">Shanghai</option>
+			<option value="Beijing">Beijing</option>
+			<option value="Guangzhou">Guangzhou</option>
+			<option value="New York">New York</option>
+		</select>
+		<dt>Stop city:
+		<dd>
+		<select name=stop_city style="text-align:center">
+			<option value="Hangzhou">Hangzhou</option>
+			<option value="Shanghai">Shanghai</option>
+			<option value="Beijing">Beijing</option>
+			<option value="Guangzhou">Guangzhou</option>
+			<option value="New York">New York</option>
+		</select>
+		<dt>Start airport:
+		<dd>
+		<select name=start_airport style="text-align:center">
+			<option value="Hangzhou airport">Hangzhou</option>
+			<option value="Shanghai airport">Shanghai</option>
+			<option value="Beijing airport">Beijing</option>
+			<option value="Guangzhou airport">Guangzhou</option>
+			<option value="New York airport">New York</option>
+		</select>
+		<dt>Stop airport:
+		<dd>
+		<select name=stop_airport style="text-align:center">
+			<option value="Hangzhou airport">Hangzhou</option>
+			<option value="Shanghai airport">Shanghai</option>
+			<option value="Beijing airport">Beijing</option>
+			<option value="Guangzhou airport">Guangzhou</option>
+			<option value="New York airport">New York</option>
+		</select>
+		<dt>Start time:
+        <dd><input type=text size=30 name=start_time>
+		<dt>Stop time:
+        <dd><input type=text size=30 name=stop_time>
+		<dt>Path:
+        <dd><input type=text size=30 name=path>
+		<dt>Plane type:
+        <dd>
+		<select name=plane_type style="text-align:center">
+			<option value="big plane">Big</option>
+			<option value="medium plane">Medium</option>
+			<option value="small plane">Small</option>
+		</select>
+        <dd><input type=submit value=Add>
+      </dl>
+  </fieldset>
+    </form>
+  {% endif %}
+{% endblock %}

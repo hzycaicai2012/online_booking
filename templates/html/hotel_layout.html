@@ -1,31 +1,30 @@
 <!doctype html>
 <title>Online_Booking</title>
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='old_style.css') }}">
 <div class=page>
   <h1>Online_Booking</h1>
   <div class=metanav>
+    <a href="{{ url_for('index') }}">index</a>
     <a href="{{ url_for('hotel') }}">hotel</a>
-    <a href="{{ url_for('hotel') }}">flight</a>
+    <a href="{{ url_for('flight') }}">flight</a>
   {% if not session.logged_in %}
     <a href="{{ url_for('login') }}">log in</a>
   {% else %}
     <a href="{{ url_for('logout') }}">log out</a>
   {% endif %}
+  {% if session.manager %}
+    <a href="{{ url_for('add_hotel') }}">add hotel</a>
+  {% endif %}
   </div>
   <div>
-    <form action="" method=post class=search-hotel>
-	  <li>destination:<input type=text size=10 name=destination value="">&emsp;
-			start date:<input type=date name=start_date>&emsp;
-			end date:<input type=date name=start_date>&emsp;
-			key word:<input type=text size=15 name=search value="">
-			<input type=submit value=Search>
-	  </li>
+	  <form action="{{ url_for('search_hotel')}}" method=post class=search-hotel>
+	  <p>destination:<input type=text size=10 name=destination value="">&emsp;
+		start date:<input type=date name=start_date>&emsp;
+		end date:<input type=date name=start_date></p>
+		<p>key word:<input type=text size=15 name=key value="">
+	  <input type=submit value=Search></p>
     </form>
-	<li align="left"><input type=button value=price>&emsp;&emsp;
-	<input type=button value=star>&emsp;&emsp;
-	<input type=button value=hot>&emsp;&emsp;
-	<input type=button value=score></li>
-  </div>
+ </div>
 
   {% for message in get_flashed_messages() %}
     <div class=flash>{{ message }}</div>
